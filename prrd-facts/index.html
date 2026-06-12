@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PRRD Infographic Facts</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Georgia, serif;
+    }
+
+    body {
+        background: radial-gradient(circle at top, #111, #000);
+        color: white;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #d4af37;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+    }
+
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+        gap: 15px;
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .panel {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(212,175,55,0.3);
+        border-radius: 15px;
+        padding: 15px;
+        backdrop-filter: blur(10px);
+    }
+
+    .center {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .factBox {
+        min-height: 120px;
+        font-size: 1.2rem;
+        margin: 20px 0;
+        transition: 0.4s;
+    }
+
+    .fade {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    button {
+        padding: 12px;
+        border: none;
+        border-radius: 25px;
+        background: linear-gradient(45deg, #d4af37, #f7e08c);
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    .title {
+        color: #d4af37;
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+
+    ul {
+        list-style: none;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    li {
+        margin-bottom: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 5px;
+    }
+
+    .quote {
+        margin-top: 10px;
+        font-style: italic;
+        color: #f7e08c;
+        font-size: 0.9rem;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>PRRD INFOGRAPHIC FACTS</h1>
+
+<div class="layout">
+
+    <!-- LEFT PANEL -->
+    <div class="panel">
+        <div class="title">KEY FACTS</div>
+        <ul>
+            <li>16th President of the Philippines</li>
+            <li>Mayor of Davao City for 20+ years</li>
+            <li>Former prosecutor</li>
+            <li>Known for strong leadership style</li>
+            <li>Focused on infrastructure growth</li>
+        </ul>
+    </div>
+
+    <!-- CENTER PANEL -->
+    <div class="panel center">
+        <div class="title">FEATURE FACT</div>
+
+        <div class="factBox" id="factBox">
+            Click below to generate a PRRD fact
+        </div>
+
+        <button onclick="newFact()">Generate Fact</button>
+
+        <div class="quote">
+            "Leadership is about action, not words."
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="panel">
+        <div class="title">STRENGTHS</div>
+        <ul>
+            <li>Strong leadership</li>
+            <li>Decisive decision-making</li>
+            <li>Public safety reforms</li>
+            <li>Infrastructure push</li>
+            <li>Direct communication style</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+const facts = [
+    "Rodrigo Duterte served as President of the Philippines from 2016 to 2022.",
+    "He is known for his long tenure as Mayor of Davao City.",
+    "His administration focused heavily on infrastructure development.",
+    "He is known for his direct and straightforward communication style.",
+    "Davao City was recognized for improved safety during his leadership.",
+    "He previously worked as a public prosecutor."
+];
+
+function newFact() {
+    const box = document.getElementById("factBox");
+
+    box.classList.add("fade");
+
+    setTimeout(() => {
+        const random = Math.floor(Math.random() * facts.length);
+        box.textContent = facts[random];
+        box.classList.remove("fade");
+    }, 250);
+}
+</script>
+
+</body>
+</html>
