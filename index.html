@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Gallery - Gloce Balisado</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Georgia", serif;
+        background: radial-gradient(circle at top, #0a0a0a, #000);
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    .container {
+        position: relative;
+        z-index: 2;
+        max-width: 1000px;
+        width: 100%;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    h1 {
+        color: #d4af37;
+        font-size: 3.5rem;
+        letter-spacing: 3px;
+        margin-bottom: 10px;
+        text-shadow: 0 0 20px rgba(212,175,55,0.3);
+    }
+
+    .subtitle {
+        color: #b8860b;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        font-style: italic;
+    }
+
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .project-card {
+        background: rgba(255,255,255,0.06);
+        border: 2px solid rgba(212,175,55,0.3);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 0 40px rgba(212,175,55,0.15);
+        transition: all 0.4s ease;
+        cursor: pointer;
+    }
+
+    .project-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(212,175,55,0.6);
+        box-shadow: 0 0 60px rgba(212,175,55,0.3);
+    }
+
+    .project-card h2 {
+        color: #d4af37;
+        font-size: 2rem;
+        margin-bottom: 15px;
+        letter-spacing: 1px;
+    }
+
+    .project-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #e8e8e8;
+        margin-bottom: 20px;
+    }
+
+    .features {
+        text-align: left;
+        background: rgba(0,0,0,0.3);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+    }
+
+    .features li {
+        margin: 8px 0;
+        color: #d4af37;
+    }
+
+    .visit-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(45deg, #d4af37, #f7e08c);
+        color: #111;
+        border: none;
+        border-radius: 30px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+    .visit-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 5px 20px rgba(212,175,55,0.4);
+    }
+
+    .visit-btn:active {
+        transform: scale(0.95);
+    }
+
+    footer {
+        text-align: center;
+        padding-top: 40px;
+        border-top: 1px solid rgba(212,175,55,0.2);
+        color: #d4af37;
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+    }
+
+    .credit {
+        margin-top: 15px;
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        .projects-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .project-card h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="container">
+    <header>
+        <h1>✨ Prompt Gallery ✨</h1>
+        <p class="subtitle">A Collection of Interactive Experiences</p>
+    </header>
+
+    <div class="projects-grid">
+        <!-- Project 1: Luxury Facts+ -->
+        <div class="project-card">
+            <h2>Luxury Infinite Facts+</h2>
+            <p>Discover fascinating facts from across the universe with style and elegance.</p>
+            
+            <div class="features">
+                <ul>
+                    <li>✓ Dynamic fact generation</li>
+                    <li>✓ 5 categories (Space, Animals, Earth, Human Body, All)</li>
+                    <li>✓ Dark/Light theme toggle</li>
+                    <li>✓ Favorites system</li>
+                    <li>✓ Animated particle background</li>
+                </ul>
+            </div>
+
+            <a href="luxury-facts/index.html" class="visit-btn">Visit Project</a>
+        </div>
+
+        <!-- Project 2: PRRD Facts -->
+        <div class="project-card">
+            <h2>PRRD Facts</h2>
+            <p>Educational information about the 16th President of the Philippines.</p>
+            
+            <div class="features">
+                <ul>
+                    <li>✓ Curated factual information</li>
+                    <li>✓ Clean, focused interface</li>
+                    <li>✓ Smooth transitions</li>
+                    <li>✓ Luxury aesthetic</li>
+                    <li>✓ Mobile responsive</li>
+                </ul>
+            </div>
+
+            <a href="prrd-facts/index.html" class="visit-btn">Visit Project</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>Crafted by Gloce Balisado</p>
+        <p class="credit">Each project combines elegant design with interactive functionality</p>
+    </footer>
+</div>
+
+<script>
+/* =======================
+   PARTICLE BACKGROUND
+======================= */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 100; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3
+    });
+}
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let p of particles) {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(212,175,55,0.5)";
+        ctx.fill();
+    }
+
+    requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
