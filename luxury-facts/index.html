@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxury Infinite Facts+</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Georgia", serif;
+        transition: background 0.4s, color 0.4s;
+    }
+
+    body {
+        overflow: hidden;
+        height: 100vh;
+    }
+
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    .app {
+        position: relative;
+        z-index: 2;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 500px;
+        backdrop-filter: blur(18px);
+        border-radius: 25px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid rgba(212,175,55,0.3);
+        box-shadow: 0 0 40px rgba(212,175,55,0.2);
+        transition: 0.4s;
+    }
+
+    h1 {
+        color: #d4af37;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    .fact {
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 1.1rem;
+    }
+
+    select, button {
+        width: 100%;
+        padding: 12px;
+        margin: 6px 0;
+        border-radius: 12px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+
+    .small {
+        font-size: 12px;
+        margin-top: 10px;
+        color: #d4af37;
+        opacity: 0.8;
+    }
+
+    /* =======================
+       DARK THEME (DEFAULT)
+    ======================= */
+    body.dark {
+        background: radial-gradient(circle at top, #0b0b0b, #000);
+        color: white;
+    }
+
+    body.dark .card {
+        background: rgba(255,255,255,0.06);
+        color: white;
+    }
+
+    body.dark button {
+        background: linear-gradient(45deg, #d4af37, #f7e08c);
+        color: #111;
+    }
+
+    /* =======================
+       LIGHT THEME
+    ======================= */
+    body.light {
+        background: linear-gradient(135deg, #f5f5f5, #ffffff);
+        color: #111;
+    }
+
+    body.light .card {
+        background: rgba(255,255,255,0.85);
+        color: #111;
+        border: 1px solid rgba(0,0,0,0.1);
+        box-shadow: 0 0 25px rgba(0,0,0,0.1);
+    }
+
+    body.light .small {
+        color: #b08d20;
+    }
+
+    body.light button {
+        background: linear-gradient(45deg, #d4af37, #b08d20);
+        color: white;
+    }
+
+</style>
+</head>
+
+<body class="dark">
+
+<canvas id="particles"></canvas>
+
+<div class="app">
+    <div class="card">
+        <h1>Luxury Infinite Facts+</h1>
+
+        <button onclick="toggleTheme()" id="themeBtn">☀ Light Mode</button>
+
+        <select id="category">
+            <option value="all">All</option>
+            <option value="space">Space</option>
+            <option value="animals">Animals</option>
+            <option value="earth">Earth</option>
+            <option value="human">Human Body</option>
+        </select>
+
+        <div class="fact" id="factBox">
+            Tap to generate a luxury fact ✨
+        </div>
+
+        <button onclick="newFact()">Generate Fact</button>
+        <button onclick="toggleFavorite()">❤ Favorite</button>
+        <button onclick="clearAll()">Clear Data</button>
+
+        <div class="small">Crafted for Gloce Balisado</div>
+    </div>
+</div>
+
+<script>
+/* =======================
+   THEME SYSTEM
+======================= */
+function loadTheme() {
+    const saved = localStorage.getItem("theme") || "dark";
+    document.body.className = saved;
+    updateThemeButton();
+}
+
+function toggleTheme() {
+    if (document.body.classList.contains("dark")) {
+        document.body.className = "light";
+        localStorage.setItem("theme", "light");
+    } else {
+        document.body.className = "dark";
+        localStorage.setItem("theme", "dark");
+    }
+    updateThemeButton();
+}
+
+function updateThemeButton() {
+    const btn = document.getElementById("themeBtn");
+    if (document.body.classList.contains("dark")) {
+        btn.textContent = "☀ Light Mode";
+    } else {
+        btn.textContent = "🌙 Dark Mode";
+    }
+}
+
+/* =======================
+   DATA
+======================= */
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+let lastFact = "";
+
+/* =======================
+   SOUND
+======================= */
+function playSound() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.value = 520;
+
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.25);
+}
+
+/* =======================
+   AI FACT GENERATOR
+======================= */
+function generateFact(category) {
+    const templates = {
+        space: [
+            "A planet has {num}x Earth's gravity.",
+            "A star lives for {num} billion years.",
+            "There are {num} billion galaxies."
+        ],
+        animals: [
+            "A {animal} survives {num} days without food.",
+            "Some {animal}s recognize themselves.",
+            "A {animal}'s heart beats {num}/min."
+        ],
+        earth: [
+            "Earth's core is {num}°C hotter than the sun's surface layer.",
+            "{num}% of Earth is ocean.",
+            "Lightning carries {num} volts."
+        ],
+        human: [
+            "Your brain generates {num}% subconscious thoughts.",
+            "Humans blink {num} times/min.",
+            "Cells regenerate every {num} days."
+        ],
+        all: [
+            "The universe hides {num} unknown laws of physics.",
+            "Time slows by {num}% near gravity wells.",
+            "Reality may contain {num} dimensions."
+        ]
+    };
+
+    const animals = ["wolf", "lion", "shark", "eagle", "dolphin"];
+
+    let list = templates[category] || templates.all;
+    let text = list[Math.floor(Math.random() * list.length)];
+
+    return text
+        .replace("{num}", Math.floor(Math.random() * 900 + 10))
+        .replace("{animal}", animals[Math.floor(Math.random() * animals.length)]);
+}
+
+/* =======================
+   FACT SYSTEM
+======================= */
+function newFact() {
+    const cat = document.getElementById("category").value;
+    const fact = generateFact(cat);
+
+    lastFact = fact;
+
+    const box = document.getElementById("factBox");
+    box.style.opacity = 0;
+
+    setTimeout(() => {
+        box.textContent = fact;
+        box.style.opacity = 1;
+    }, 200);
+
+    playSound();
+}
+
+/* =======================
+   FAVORITES
+======================= */
+function toggleFavorite() {
+    if (!lastFact) return;
+
+    if (favorites.includes(lastFact)) {
+        favorites = favorites.filter(f => f !== lastFact);
+    } else {
+        favorites.push(lastFact);
+    }
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+/* =======================
+   CLEAR
+======================= */
+function clearAll() {
+    localStorage.clear();
+    favorites = [];
+    lastFact = "";
+    document.getElementById("factBox").textContent = "Data cleared ✨";
+}
+
+/* =======================
+   INIT
+======================= */
+loadTheme();
+
+/* =======================
+   PARTICLE BACKGROUND
+======================= */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 80; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5
+    });
+}
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let p of particles) {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(212,175,55,0.6)";
+        ctx.fill();
+    }
+
+    requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
